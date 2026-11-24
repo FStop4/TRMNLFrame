@@ -1,0 +1,56 @@
+---
+# Placeholders only. For TRMNL Frame (landscape). Frost data comes from the published trmnl-farmers-almanac data site (see README).
+name: Farm Almanac Frame
+description: Moon, frost, planting
+strategy: polling
+refresh_interval: 1440
+polling_verb: get
+# Two URLs, one per line. Data arrives as IDX_0 (NOAA frost dates) and IDX_1 (Open-Meteo weather, optional).
+polling_url: |-
+  {{ data_base_url }}/frost/{{ zip }}.json
+  https://api.open-meteo.com/v1/forecast?latitude={{ latitude }}&longitude={{ longitude }}&daily=temperature_2m_min,sunrise,sunset&hourly=soil_temperature_6cm&forecast_hours=1&forecast_days=2&temperature_unit=fahrenheit&timezone=auto
+custom_fields:
+  - keyname: zip
+    field_type: string
+    name: ZIP code
+    description: US ZIP code used to look up average frost dates.
+    default: '65101'
+  - keyname: latitude
+    field_type: string
+    name: Latitude
+    description: Decimal degrees, used for tonight's low, soil temperature and sunrise/sunset.
+    default: '38.58'
+  - keyname: longitude
+    field_type: string
+    name: Longitude
+    description: Decimal degrees (negative in the US).
+    default: '-92.17'
+  - keyname: region_label
+    field_type: string
+    name: Location label (optional)
+    description: Shown in the title bar. Blank uses the nearest weather station name.
+    default: ''
+    optional: true
+  - keyname: last_frost_override
+    field_type: string
+    name: Last spring frost override (MM-DD, optional)
+    description: Leave blank to use NOAA averages for your ZIP.
+    default: ''
+    optional: true
+  - keyname: first_frost_override
+    field_type: string
+    name: First fall frost override (MM-DD, optional)
+    description: Leave blank to use NOAA averages for your ZIP.
+    default: ''
+    optional: true
+  - keyname: data_base_url
+    field_type: string
+    name: Frost data site URL
+    description: Published frost-data site from the trmnl-farmers-almanac repo, no trailing slash (e.g. https://YOUR_GITHUB_USER.github.io/trmnl-farmers-almanac).
+    default: 'https://YOUR_GITHUB_USER.github.io/trmnl-farmers-almanac'
+  - keyname: photo_base_url
+    field_type: string
+    name: Photo base URL (optional)
+    description: Folder serving frame-1.jpg to frame-3.jpg, no trailing slash (e.g. https://raw.githubusercontent.com/YOUR_GITHUB_USER/TRMNLFrame/main/photos). Blank shows a plain panel.
+    default: ''
+    optional: true
